@@ -12,7 +12,7 @@ public class utils {
         return "§4ERROR:§c ";
     }
 
-    public static String  getWarningColor() {
+    public static String getWarningColor() {
         return "§c";
     }
 
@@ -39,4 +39,5 @@ public class utils {
     public static String footer() {
         return "§b███████████████████████████████";
     }
+
 }

@@ -34,8 +34,7 @@ public class command_holocountdown implements CommandExecutor {
                         create.setColor(ChatColor.GREEN);
                         create.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                                 new ComponentBuilder("§bPossible Possibilities are: \n" +
-                                        "§9/hc create <#>      §2This will create a countdown with the given number as Seconds\n" +
-                                        "§9/hc create <#>s     §2Same as that above ('s' stands for Seconds)\n" +
+                                        "§9/hc create <#>s      §2This will create a countdown with the given number as Seconds\n" +
                                         "§9/hc create <#>m     §2This will create a countdown with the given number as Minutes\n" +
                                         "§9/hc create <#>h     §2This will create a countdown with the given number as Hours\n" +
                                         "§9/hc create <#>d     §2This will create a countdown with the given number as Days\n" +
@@ -51,6 +50,7 @@ public class command_holocountdown implements CommandExecutor {
                         TextComponent list = new TextComponent("/hc list");
                         list.setColor(ChatColor.GREEN);
                         list.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§bGives you a list of all Holograms with their ID").create()));
+                        player.spigot().sendMessage(list);
                         player.sendMessage(" ");
 
                         TextComponent credits = new TextComponent("Click Me");
@@ -78,7 +78,18 @@ public class command_holocountdown implements CommandExecutor {
                             player.sendMessage(utils.getWarningColor() + "This subcommand does not exist. Try /hc to get an list of all possible commands");
                         }
                     } else if (args.length == 2) {
-                        //TODO
+                        if (args[0].equalsIgnoreCase("create")) {
+                            String s = args[1].substring(0, args[1].length() -2);
+                            int time = Integer.parseInt(s);
+                            char unit = args[1].charAt(args[1].length() -1);
+                            try {
+                                calculateUnits(time, unit);
+                            } catch (Exception e) {
+                                player.sendMessage(utils.getError() + "cannot create a hologram. This is coursed by:\n" +
+                                        " - using no Timeunit (eg. /hc create 10)\n" +
+                                        " - using a not registered unit. possible units are s(econds), m(inutes), h(ours), d(ays), w(eeks)!");
+                            }
+                        }
                     }
                 }
             } else {
@@ -86,5 +97,27 @@ public class command_holocountdown implements CommandExecutor {
             }
         }
         return false;
+    }
+
+    /**
+     * Calculates the Time in Ticks
+     *
+     * @param i an Integer
+     * @param c an Unit
+     * @return Ticks
+     */
+    private Integer calculateUnits(int i, char c) {
+        if (String.valueOf(c).equalsIgnoreCase("s")) {
+            return (i * 20);
+        } else if (String.valueOf(c).equalsIgnoreCase("m")) {
+            return (i * 60 * 20);
+        } else if (String.valueOf(c).equalsIgnoreCase("h")) {
+            return (i * 60 * 60 *20);
+        } else if (String.valueOf(c).equalsIgnoreCase("d")) {
+            return (i * 24 * 60 * 60 * 20);
+        } else if (String.valueOf(c).equalsIgnoreCase("w")) {
+            return (i * 7 * 24 * 60 * 60 * 20);
+        }
+        return null;
     }
 }

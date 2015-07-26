@@ -2,4 +2,8 @@ authors: [LPkkjHD, ss0198]
 name: HoloCountdown
 version: 0.1-SNAPSHOT
 website: http://freemine.de/
-main: de.freemine.HoloCountdown.Main
+main: de.freemine.holocountdown.Main
+commands:
+  HoloCountdown:
+    description: The Main HoloCountdown Command
+    aliases: [hc]
