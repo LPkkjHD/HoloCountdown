@@ -13,11 +13,13 @@ import java.util.HashMap;
 public class Main extends JavaPlugin {
     private ArrayList<Hologram> holograms = new ArrayList<Hologram>();
     private HashMap<Hologram, Boolean> active = new HashMap<Hologram, Boolean>();
+    public Main plugin = this;
 
     @Override
     public void onEnable() {
         getCommand("HoloCountdown").setExecutor(new command_holocountdown(this));
         getLogger().info("enabled");
+        saveConfig();
     }
 
     @Override

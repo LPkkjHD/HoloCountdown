@@ -1,8 +1,10 @@
 package de.freemine.holocountdown.command;
 
 import de.freemine.holocountdown.Main;
+import de.freemine.holocountdown.timer.countdown;
 import de.freemine.holocountdown.util.utils;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -21,7 +23,7 @@ public class command_holocountdown implements CommandExecutor {
         this.main = main;
     }
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, final Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("HoloCountdown")) {
             if (sender instanceof Player) {
                 Player player = (Player) sender;
@@ -56,6 +58,7 @@ public class command_holocountdown implements CommandExecutor {
                         TextComponent credits = new TextComponent("Click Me");
                         credits.setColor(ChatColor.GOLD);
                         credits.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§cClick this to open the Developers Website!").create()));
+                        credits.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "http://freemine.de/"));
                         player.spigot().sendMessage(credits);
 
                         player.sendMessage(utils.footer());
@@ -79,15 +82,21 @@ public class command_holocountdown implements CommandExecutor {
                         }
                     } else if (args.length == 2) {
                         if (args[0].equalsIgnoreCase("create")) {
-                            String s = args[1].substring(0, args[1].length() -2);
+                            String s = args[1].substring(0, args[1].length() -1);
                             int time = Integer.parseInt(s);
                             char unit = args[1].charAt(args[1].length() -1);
                             try {
-                                calculateUnits(time, unit);
+                                if (calculateUnits(time, unit) != null) {
+                                    //TODO
+                                    int counting = 10;
+                                    main.getServer().getScheduler().runTask(main.plugin, new countdown(main, counting, player.getLocation()));
+
+                                }
                             } catch (Exception e) {
                                 player.sendMessage(utils.getError() + "cannot create a hologram. This is coursed by:\n" +
                                         " - using no Timeunit (eg. /hc create 10)\n" +
                                         " - using a not registered unit. possible units are s(econds), m(inutes), h(ours), d(ays), w(eeks)!");
+                                e.printStackTrace();
                             }
                         }
                     }
@@ -100,23 +109,23 @@ public class command_holocountdown implements CommandExecutor {
     }
 
     /**
-     * Calculates the Time in Ticks
+     * Calculates the Time in Seconds
      *
      * @param i an Integer
      * @param c an Unit
-     * @return Ticks
+     * @return Seconds
      */
     private Integer calculateUnits(int i, char c) {
         if (String.valueOf(c).equalsIgnoreCase("s")) {
-            return (i * 20);
+            return (i);
         } else if (String.valueOf(c).equalsIgnoreCase("m")) {
-            return (i * 60 * 20);
+            return (i * 60);
         } else if (String.valueOf(c).equalsIgnoreCase("h")) {
-            return (i * 60 * 60 *20);
+            return (i * 60 * 60);
         } else if (String.valueOf(c).equalsIgnoreCase("d")) {
-            return (i * 24 * 60 * 60 * 20);
+            return (i * 24 * 60 * 60);
         } else if (String.valueOf(c).equalsIgnoreCase("w")) {
-            return (i * 7 * 24 * 60 * 60 * 20);
+            return (i * 7 * 24 * 60 * 60);
         }
         return null;
     }

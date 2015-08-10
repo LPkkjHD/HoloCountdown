@@ -1,0 +1,6 @@
+# Default Configuration
+count: 3 # the count of lines
+replace: 2 # the line where the countdown shall be replaced
+1: "Lorem ipsum dolor st"
+2: "amet {COUNTDOWN}"
+3: "===================="
